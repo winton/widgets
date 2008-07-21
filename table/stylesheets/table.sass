@@ -1,0 +1,26 @@
+.table_widget
+  :clear both
+  .title
+    .indicator
+      :float right
+  .headers
+    .on
+      :cursor pointer
+    .arrow
+      :opacity 0
+      :float right
+      :width 8px
+      :height 4px
+      :background-repeat no-repeat
+    .arrow.up
+      :background-image url('/images/<%= widget_image_path :table, 'arrow_up.png' %>')
+    .arrow.down
+      :background-image url('/images/<%= widget_image_path :table, 'arrow_down.png' %>')
+  .rows
+    :cursor pointer
+  .links
+    :float right
+    :opacity 0
+
+.table_widget_menu
+  :position absolute

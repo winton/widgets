@@ -1,0 +1,1 @@
+Global.<%= id %> = new Table(<%= options.to_json %>);

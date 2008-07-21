@@ -1,0 +1,1 @@
+Global.<%= id %> = new Dialog(<%= options.to_json %>);
