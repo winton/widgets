@@ -1,0 +1,1 @@
+Global.Indicator = new Indicator("<%= image %>", <%= x %>, <%= y %>);

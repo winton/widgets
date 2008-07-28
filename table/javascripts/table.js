@@ -9,15 +9,22 @@ var Table = new Class({
     var me = this;
     
     this.load = function() {
-      this.reload(options.index_url);
+      this.reload();
 
       table_links.getElements('a').addEvent('click', function() {
+        var table_link = options.table_links.filter(function(item) {
+          return item.title == this.textContent;
+        }, this)[0];
         new Request.HTML({
           url: this.get('href'),
           evalScripts: false,
           onComplete: function(tree, elements, html, js) {
             me.fireEvent((this.textContent.toLowerCase() + ' complete').replace(' ', '-').camelCase(), [ elements[0], js ]);
-          }.bind(this)
+          }.bind(this),
+          data: {
+            authenticity_token: Global.authenticity_token,
+            implementation: table_link.implementation
+          }
         }).get();
         return false;
       });
@@ -27,7 +34,7 @@ var Table = new Class({
         categories.addClass('selectable');
         this.removeClass('selectable');
         this.addClass('selected');
-        me.reload(options.index_url, { category: this.id });
+        me.reload({ category: this.id });
         return false;
       });
     };
@@ -48,12 +55,12 @@ var Table = new Class({
       pagination = new Element('div', { html: options.pagination });
       pagination.inject(container, 'bottom');
       pagination.getElements('a').addEvent('click', function() {
-        me.reload(null, this.getProperty('href'));
+        me.reload(this.getProperty('href'));
         return false;
       });
     };
     
-    this.reload = function(url, params, text_content) {
+    this.reload = function(params, text_content) {
       indicator.fadeIn();
       table_links.hide();
       text_content = text_content || container.getElement('.headers .on');
@@ -226,7 +233,7 @@ var Table = new Class({
           this.getFirst().addClass('down');
           this.set('sort', 'asc');
         }
-        me.reload(options.index_url, { order: options.sortable[this.textContent] + ' ' + this.get('sort') }, this.textContent);
+        me.reload({ order: options.sortable[this.textContent] + ' ' + this.get('sort') }, this.textContent);
       });
     };
     
