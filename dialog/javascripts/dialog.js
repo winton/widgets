@@ -11,7 +11,7 @@ var Dialog = new Class({
       }
     });
     
-    var indicator = new Element('div', {
+    /*var indicator = new Element('div', {
       'class': 'indicator',
       html:    '<%= widget_image :widgets, :dialog, "indicator.gif" %>',
       styles: {
@@ -21,7 +21,7 @@ var Dialog = new Class({
         left: 8
       }
     });
-    indicator.inject(container, 'top');
+    indicator.inject(container, 'top');*/
     
     var close = new Element('div', {
       'class': 'close',
@@ -74,14 +74,13 @@ var Dialog = new Class({
         lightbox.show();
       }
       
-      indicator.show();
+      Global.Indicator.show();
       content.empty();
-      container.center();
-      container.fadeIn();
       
       var finished = function() {
-        indicator.fadeOut();
+        Global.Indicator.hide();
         container.center();
+        container.fadeIn();
       };
       
       if (options.html) {
@@ -93,6 +92,7 @@ var Dialog = new Class({
       } else if (options.url) {
         new Request.HTML({
           url: options.url,
+          data: options.data,
           evalScripts: false,
           onComplete: function(tree, elements, html, js) {
             elements[0].inject(content);
