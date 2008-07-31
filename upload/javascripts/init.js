@@ -1,0 +1,1 @@
+Global['<%= id %>'] = new Upload(<%= options.to_json %>);

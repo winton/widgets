@@ -1,0 +1,1 @@
+Global.<%= id %> = new Panel(<%= options.to_json %>);

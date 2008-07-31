@@ -74,11 +74,11 @@ var Dialog = new Class({
         lightbox.show();
       }
       
-      Global.Indicator.show();
+      Global.indicator.show();
       content.empty();
       
       var finished = function() {
-        Global.Indicator.hide();
+        Global.indicator.hide();
         container.center();
         container.fadeIn();
       };

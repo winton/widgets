@@ -1,0 +1,30 @@
+- form_tag upload_url, :id => id, :class => 'upload' do |f|
+  %fieldset{ :class => "fallback" }
+    %legend File Upload
+    %p
+      Selected your media file to upload.
+    %label
+      Upload Photos:
+      %input{ :type => "file", :name => "Filedata" }/
+
+  %div{ :class => "status", :style => "display:none" }
+    %p
+      = link_to "Browse Files", '#', :class => "browse"
+      |
+      = link_to "Clear List", '#', :class => "clear_list"
+      |
+      = link_to "Upload", '#', :class => "upload_file", :style => 'font-size:18px;font-weight:bold'
+
+    %div
+      %strong{ :class => 'overall-title' }
+        Overall progress
+        %br/
+      = widget_image :widgets, :upload, 'bar.gif', :class => "progress overall-progress"
+    %div
+      %strong{ :class => 'current-title' }
+        File Progress
+        %br/
+      = widget_image :widgets, :upload, 'bar.gif', :class => "progress current-progress"
+    %div{ :class => "current-text" }
+
+  %ul{ :class => "list" }
