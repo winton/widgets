@@ -1,7 +1,7 @@
 var Indicator = new Class({
 	initialize: function(image, x, y) {
 		var container = new Element('div', {
-		  html: '<img src="/images/' + image + '" />',
+		  html: '<img src="' + image + '" />',
 		  styles: { position: 'absolute', opacity: 0, 'z-index': 5000, display: 'none' }
 		});
 		container.inject(document.body, 'bottom');

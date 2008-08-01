@@ -2,10 +2,10 @@ var Upload = new Class({
   initialize: function(options) {
     var container = $(options.id);
     var swiffy = new FancyUpload2(container.getElement('.status'), container.getElement('.list'), {
-    	url: options.upload_url,
+    	url:  options.upload_url,
+    	path: options.flash_path,
     	data: { person_id: Global.ebor.id },
     	fieldName: 'Filedata',
-    	path: '/flash/Swiff.Uploader.swf',
     	onLoad: function() {
     		container.getElement('.status').show();
     		container.getElement('.fallback').destroy();
