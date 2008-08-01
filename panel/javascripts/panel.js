@@ -2,13 +2,12 @@ var Panel = new Class({
   initialize: function(options) {
     var container = $(options.id);
     var template  = $('template_' + options.id);
-    var obj = eval(options.js_object);
-    
     this.render = function() {
-      var rendered = template.render(obj);
+      var rendered = template.render(eval(options.js_object));
       rendered.setStyle('opacity', 0);
       rendered.replaces(container);
       rendered.fade('in');
+      container = rendered;
     };
     
     this.render();
