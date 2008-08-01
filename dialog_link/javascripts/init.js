@@ -1,15 +1,20 @@
+<% templates.each do |template| -%>
+<% id       = template.respond_to?(:keys) ? template.keys.first : template -%>
+<% template = template.respond_to?(:keys) ? template[id]        : template -%>
 $('<%= id %>').addEvent('click', function(e) {
-<% case resource_type -%>
-<% when :url -%>
+  Global.dialog.render({ element: $('template_<%= template %>').render(<%= options.to_json %>) });
+  return false;
+});
+<% end -%>
+<% urls.each do |id, url| -%>
+$('<%= id %>').addEvent('click', function(e) {
   Global.dialog.render({
-    url: this.get('href'),
+    url: <%= url ? url.inspect : 'null' %> || this.get('href'),
     data: {
       authenticity_token: Global.authenticity_token,
       implementation: 'eborhood/widgets'
     }
   });
-<% when :template -%>
-  Global.dialog.render({ element: $('template_<%= id %>').render(<%= options.to_json %>) });
-<% end -%>
   return false;
 });
+<% end -%>
