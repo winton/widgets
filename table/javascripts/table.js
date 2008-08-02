@@ -39,27 +39,6 @@ var Table = new Class({
       });
     };
     
-    this.reloadRows = function() {
-      rows = Tbl('rows', options.data, '%', options.widths);
-      rows.getChildren().each(function(item, index) {
-        var id_index = index / options.columns.length;
-        if (index % options.columns.length == 0 && options.ids[id_index])
-          item.id = options.id + '_' + options.ids[id_index];
-      });
-      rows.inject(container, 'bottom');
-      rows.zebra('zebra', options.columns.length);
-      this.attachRows();
-    };
-    
-    this.reloadPagination = function() {
-      pagination = new Element('div', { html: options.pagination });
-      pagination.inject(container, 'bottom');
-      pagination.getElements('a').addEvent('click', function() {
-        me.reload(this.getProperty('href'));
-        return false;
-      });
-    };
-    
     this.reload = function(params, text_content) {
       indicator.fadeIn();
       table_links.hide();
@@ -97,6 +76,27 @@ var Table = new Class({
           $merge({ per_page: options.per_page, page: options.page, order: options.order, category: options.category }, params || {}));
     };
     
+    this.reloadPagination = function() {
+      pagination = new Element('div', { html: options.pagination });
+      pagination.inject(container, 'bottom');
+      pagination.getElements('a').addEvent('click', function() {
+        me.reload(this.getProperty('href'));
+        return false;
+      });
+    };
+    
+    this.reloadRows = function() {
+      rows = Tbl('rows', options.data, '%', options.widths);
+      rows.getChildren().each(function(item, index) {
+        var id_index = index / options.columns.length;
+        if (index % options.columns.length == 0 && options.ids[id_index])
+          item.id = options.id + '_' + options.ids[id_index];
+      });
+      rows.inject(container, 'bottom');
+      rows.zebra('zebra', options.columns.length);
+      this.attachRows();
+    };
+    
     this.attachRows = function() {
       var r = rows.getElements('.rows_cell');
       r.addEvent('mouseenter', function() {
@@ -114,11 +114,10 @@ var Table = new Class({
         });
       });
       var html;
-      
       r.addEvent('click', function(e) {
         if (menu) menu.destroy();
         if (options.row_links.length == 0) return false;
-        menu = new Element('div', {
+        me.menu = menu = new Element('div', {
           'class': 'table_widget_menu',
           styles: {
             top: e.page.y,
@@ -138,13 +137,13 @@ var Table = new Class({
           if (row_link.url.contains('.json'))
             new Request({
               url: row_link.url.replace(':id', id),
-              method: row_link.title.contains('Delete') ? 'delete' : 'get',
+              method: me.methodFromTitle(row_link.title),
               data: {
                 id: me.idFromParent(e.target.getParent()),
                 authenticity_token: Global.authenticity_token,
                 implementation: row_link.implementation
               },
-              onSuccess: function(json){
+              onComplete: function(json){
                 if (json.trim() == '')
                   me.reload();
                 me.fireEvent((row_link.title.toLowerCase() + ' complete').replace(' ', '-').camelCase(), json);
@@ -153,7 +152,7 @@ var Table = new Class({
           else
             new Request.HTML({
               url: row_link.url.replace(':id', id),
-              method: row_link.title.contains('Delete') ? 'delete' : 'get',
+              method: me.methodFromTitle(row_link.title),
               data: {
                 id: me.idFromParent(e.target.getParent()),
                 authenticity_token: Global.authenticity_token,
@@ -174,6 +173,10 @@ var Table = new Class({
         if (e.target != menu && menu)
           menu.destroy();
       });
+    };
+    
+    this.methodFromTitle = function(title) {
+      return title.contains('Delete') || title.contains('Remove') ? 'delete' : 'get';    
     };
     
     this.rowFromParent = function(parent) {
