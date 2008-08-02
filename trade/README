@@ -1,0 +1,27 @@
+class Trade < ActiveRecord::Base
+  
+  belongs_to :me,   :class_name => 'Example', :foreign_key => 'me_id'
+  belongs_to :them, :class_name => 'Example', :foreign_key => 'them_id'
+  
+  serialize :history
+  serialize :mine
+  serialize :theirs
+  
+end
+
+class CreateTrades < ActiveRecord::Migration
+  def self.up
+    create_table :trades do |t|
+      t.text :history
+      t.text :mine
+      t.text :theirs
+      t.integer :me_id
+      t.integer :them_id
+      t.timestamps
+    end
+  end
+
+  def self.down
+    drop_table :trades
+  end
+end
