@@ -86,6 +86,15 @@ var Table = new Class({
     };
     
     this.reloadRows = function() {
+      if (options.data.length == 0) {
+        var template = $('template_no_results');
+        if (template)
+          template.render().inject(container, 'before');
+        $$('no_results').destroy();
+        container.fadeOut();
+        return;
+      } else
+        container.show();
       rows = Tbl('rows', options.data, '%', options.widths);
       rows.getChildren().each(function(item, index) {
         var id_index = index / options.columns.length;
@@ -125,7 +134,7 @@ var Table = new Class({
             opacity: 0
           },
           html: options.row_links.map(function(item) {
-            return '<a href="' + item.url + '">' + item.title + '</a>';
+            return '<a href="#" style="' + (item.style || '') + '">' + item.title + '</a>';
           }).join('<br/>')
         });
         menu.inject(document.body, 'bottom');
@@ -134,6 +143,10 @@ var Table = new Class({
             return item.title == this.textContent;
           }, this)[0];
           var id = me.idFromParent(e.target.getParent());
+          if (row_link.direct) {
+            window.location = row_link.url.replace(':id', id);
+            return false;
+          }
           if (row_link.url.contains('.json'))
             new Request({
               url: row_link.url.replace(':id', id),
