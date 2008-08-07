@@ -1,7 +1,5 @@
 .table_widget{ :id => id }
   .title
-    .indicator
-      = widget_image :widgets, :table, 'indicator.gif'
     .links
       - table_links.each do |link|
         = '&nbsp;' * 2
@@ -9,6 +7,8 @@
     = title
   - unless categories.empty?
     .categories
+      .indicator
+        = widget_image :widgets, :table, 'indicator.gif'
       - categories.each_index do |index|
         - categories[index].each do |key, value|
           %div{ :id => key, :class => index > 0 ? 'selectable' : 'selected' }

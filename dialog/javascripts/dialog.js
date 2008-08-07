@@ -88,7 +88,7 @@ var Dialog = new Class({
         finished();
       } else if (options.element) {
         options.element.inject(content);
-        finished();
+        finished.delay(100);
       } else if (options.url) {
         new Request.HTML({
           url: options.url,

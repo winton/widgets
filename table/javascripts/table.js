@@ -4,7 +4,7 @@ var Table = new Class({
     var container   = $(options.id);
     var indicator   = container.getElement('.indicator');
     var table_links = container.getElement('.title .links');
-    var categories  = container.getElements('.categories div');
+    var categories  = container.getElements('.categories div').filter(function(el) { return el != indicator; });
     var headers, rows, menu, pagination;
     var me = this;
     
