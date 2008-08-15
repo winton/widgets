@@ -94,7 +94,7 @@ var Dialog = new Class({
           url: options.url,
           data: options.data,
           evalScripts: false,
-          onComplete: function(tree, elements, html, js) {
+          onSuccess: function(tree, elements, html, js) {
             elements[0].inject(content);
             eval(js);
             finished();

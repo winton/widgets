@@ -7,11 +7,13 @@ var Form = new Class({
     form.addEvent('submit', function() {
       if (form.get('submitted')) return false;
       form.set('submitted', true);
+      form['commit'].value = 'One moment please...';
+      form['commit'].disabled = true;
       new Request.HTML({
         url: form.getProperty('action'),
         method: 'post',
         evalScripts: false,
-        onComplete: function(tree, elements, html, js) {
+        onSuccess: function(tree, elements, html, js) {
           me.fireEvent('complete', [ elements ? elements[0] : null, js ]);
         }
       }).send(form.toQueryString());

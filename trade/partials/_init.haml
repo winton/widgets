@@ -2,11 +2,11 @@
   .mine_target
     .instructions Drag my things here
   .mine
-    = render_widget :widgets, :table, { :id => 'trade_table_mine', :index_url => index_url, :per_page => 5, :table_links => table_links }
+    = render_widget :widgets, :table, { :id => 'trade_table_mine', :index_url => mine_index_url, :per_page => 5, :table_links => table_links }
   .theirs_target
     .instructions Drag their things here
   .theirs
-    = render_widget :widgets, :table, { :id => 'trade_table_theirs', :index_url => index_url, :per_page => 5, :table_links => table_links }
+    = render_widget :widgets, :table, { :id => 'trade_table_theirs', :index_url => theirs_index_url, :per_page => 5, :table_links => table_links }
   .submit
     = submit_tag 'Send trade offer', :class => 'send'
     = submit_tag 'Suggest another trade', :class => 'suggest'

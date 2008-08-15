@@ -1,6 +1,6 @@
 var Table = new Class({
   Implements: [ Events ],
-  initialize: function(options) {    
+  initialize: function(options) {
     var container   = $(options.id);
     var indicator   = container.getElement('.indicator');
     var table_links = container.getElement('.title .links');
@@ -18,7 +18,7 @@ var Table = new Class({
         new Request.HTML({
           url: this.get('href'),
           evalScripts: false,
-          onComplete: function(tree, elements, html, js) {
+          onSuccess: function(tree, elements, html, js) {
             me.fireEvent((this.textContent.toLowerCase() + ' complete').replace(' ', '-').camelCase(), [ elements[0], js ]);
           }.bind(this),
           data: {
@@ -34,7 +34,7 @@ var Table = new Class({
         categories.addClass('selectable');
         this.removeClass('selectable');
         this.addClass('selected');
-        me.reload({ category: this.id });
+        me.reload({ category: this.id, page: 1 });
         return false;
       });
     };
@@ -47,7 +47,7 @@ var Table = new Class({
         text_content = text_content.textContent;
       new Request.JSON({
         url: options.index_url,
-        onComplete: function(json){
+        onSuccess: function(json){
           $extend(options, json);
           if (!headers) { // create headers
             var columns = options.columns.map(function(item) {
@@ -86,15 +86,16 @@ var Table = new Class({
     };
     
     this.reloadRows = function() {
-      if (options.data.length == 0) {
+      var no_results = $(options.id + '_no_results');
+      if (no_results) no_results.destroy();
+      if (options.data.length == 0 && !options.category) {
         var template = $('template_no_results');
-        if (template)
-          template.render().inject(container, 'before');
-        $$('no_results').destroy();
+        if (template && !no_results)
+          template.render(options).inject(container, 'before');
         container.fadeOut();
         return;
       } else
-        container.show();
+        container.fadeIn();
       rows = Tbl('rows', options.data, '%', options.widths);
       rows.getChildren().each(function(item, index) {
         var id_index = index / options.columns.length;
@@ -125,7 +126,7 @@ var Table = new Class({
       var html;
       r.addEvent('click', function(e) {
         if (menu) menu.destroy();
-        if (options.row_links.length == 0) return false;
+        if (options.row_links.length == 0) return true;
         me.menu = menu = new Element('div', {
           'class': 'table_widget_menu',
           styles: {
@@ -156,7 +157,7 @@ var Table = new Class({
                 authenticity_token: Global.authenticity_token,
                 implementation: row_link.implementation
               },
-              onComplete: function(json){
+              onSuccess: function(json){
                 if (json.trim() == '')
                   me.reload();
                 me.fireEvent((row_link.title.toLowerCase() + ' complete').replace(' ', '-').camelCase(), json);
@@ -172,7 +173,7 @@ var Table = new Class({
                 implementation: row_link.implementation
               },
               evalScripts: false,
-              onComplete: function(tree, elements, html, js) {
+              onSuccess: function(tree, elements, html, js) {
                 me.fireEvent((row_link.title.toLowerCase() + ' complete').replace(' ', '-').camelCase(), [ elements[0], js ]);
               }
             }).send();

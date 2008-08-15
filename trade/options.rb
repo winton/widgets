@@ -19,8 +19,8 @@
   :theirs   => [],
   :me       => nil,
   :them     => nil,
-  :trade_id => nil,  # if assigned, uses edit url instead of new url to initialize
-  :index_url => nil, # see table widget
+  :mine_index_url   => nil, # see table widget
+  :theirs_index_url => nil, # see table widget
   :column_indices => {
     :description => 1,
     :price => 3
