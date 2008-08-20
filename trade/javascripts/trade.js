@@ -17,13 +17,15 @@ var Trade = new Class({
               return div.getElement('img');
             }).clean()[0];
             var description = rows[options.column_indices.description].textContent;
-            var price = rows[options.column_indices.price].textContent.replace(/\D/g, '').toFloat();
+            var price = rows[options.column_indices.price].textContent.replace('$', '').toFloat();
             var div = new Element('div', {
               'class': 'item',
-              id: options.id + '_' + price + '_' + rows[0].id.split('_').getLast(),
-              html: description
+              id: options.id + '_' + rows[0].id.split('_').getLast(),
+              html: description,
+              price: price
             });
             droppable.setStyle('background', '#F0EFEC');
+            if ($(div.id)) return;
             if (!total) {
               total = new Element('div', {
                 'class': 'total',
@@ -35,14 +37,13 @@ var Trade = new Class({
               total.innerHTML = '= $' + price;
             }
             if (img) {
-              img.clone().inject(div, 'top');
               new Element('br').inject(div, 'top');
+              img.clone().inject(div, 'top');
             }
             div.inject(droppables[0], 'bottom');
             new Drag.Move(div, {
               onDrop: function(element) {
-                var id = element.id.split('_');
-                price -= id[id.length - 2];
+                price -= element.get('price');
                 total.innerHTML = '= $' + price;
                 if (price == 0) {
                   total.destroy();

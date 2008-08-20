@@ -86,22 +86,28 @@ var Table = new Class({
     };
     
     this.reloadRows = function() {
-      var no_results = $(options.id + '_no_results');
-      if (no_results) no_results.destroy();
-      if (options.data.length == 0 && !options.category) {
-        var template = $('template_no_results');
-        if (template && !no_results)
-          template.render(options).inject(container, 'before');
-        container.fadeOut();
-        return;
-      } else
-        container.fadeIn();
+      var template = $('template_no_results');
+      if (template) {
+        var no_results = $(options.id + '_no_results');
+        if (no_results) no_results.destroy();
+        if (options.data.length == 0 && !options.category) {
+          if (template && !no_results)
+            template.render(options).inject(container, 'before');
+          container.fadeOut();
+          return;
+        } else
+          container.fadeIn();
+      }
       rows = Tbl('rows', options.data, '%', options.widths);
       rows.getChildren().each(function(item, index) {
         var id_index = index / options.columns.length;
         if (index % options.columns.length == 0 && options.ids[id_index])
           item.id = options.id + '_' + options.ids[id_index];
       });
+      if (options.data.length == 0) {
+        rows.getFirst().addClass('no_results');
+        rows.getFirst().innerHTML = 'No results.';
+      }
       rows.inject(container, 'bottom');
       rows.zebra('zebra', options.columns.length);
       this.attachRows();
