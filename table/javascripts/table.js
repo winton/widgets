@@ -1,6 +1,7 @@
 var Table = new Class({
   Implements: [ Events ],
   initialize: function(options) {
+    this.options = options;
     var container   = $(options.id);
     var indicator   = container.getElement('.indicator');
     var table_links = container.getElement('.title .links');
@@ -123,6 +124,7 @@ var Table = new Class({
           if (item.hasClass('zebra_highlight')) item.set('was_highlighted', true);
           else item.addClass('zebra_highlight');
         });
+        me.fireEvent('mouseenter', [row]);
       });
       r.addEvent('mouseleave', function() {
         var row = me.rowFromParent(this.getParent());
@@ -130,6 +132,7 @@ var Table = new Class({
           if (item.get('was_highlighted')) return;
           item.removeClass('zebra_highlight');
         });
+        me.fireEvent('mouseleave', [row]);
       });
       var html;
       r.addEvent('click', function(e) {
@@ -268,13 +271,16 @@ var Table = new Class({
       });
     };
     
-    this.dataFromHidden = function() {
-      var data = {};
-      rows.each(function(row) {
+    this.dataFromHidden = function(specific_rows) {
+      var data = [];
+      (specific_rows || rows.getChildren()).each(function(row) {
+        if (row.hasClass('first'))
+          data.push({ id: this.idFromParent(row) });
         row.getElements('input').each(function(input) {
-          data[input.name] = input.value;
+          data.getLast()[input.name] = input.value;
         });
-      });
+      }.bind(this));
+      return data;
     };
     
     this.load();
