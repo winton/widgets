@@ -35,5 +35,9 @@
   #  { :title => 'Edit',   :url => '/some_resource/:id/edit' },
   #  { :title => 'Delete', :url => '/some_resource/:id.json' }
   #]
-  :row_links => []
+  :row_links => [],
+  
+  :indicator => widget_image(:widgets, :table, 'indicator.gif'),
+  :indicator_where => 'categories',
+  :load_on_start => true
 }

@@ -9,7 +9,8 @@ var Table = new Class({
     var me = this;
     
     this.load = function() {
-      this.reload();
+      if (options.load_on_start)
+        this.reload();
 
       table_links.getElements('a').addEvent('click', function() {
         var table_link = options.table_links.filter(function(item) {
@@ -40,6 +41,7 @@ var Table = new Class({
     };
     
     this.reload = function(params, text_content) {
+      this.fireEvent('reloadStart');
       indicator.fadeIn();
       table_links.hide();
       text_content = text_content || container.getElement('.headers .on');
@@ -106,7 +108,7 @@ var Table = new Class({
       });
       if (options.data.length == 0) {
         rows.getFirst().addClass('no_results');
-        rows.getFirst().innerHTML = 'No results.';
+        rows.getFirst().innerHTML = '<div>No results.</div>';
       }
       rows.inject(container, 'bottom');
       rows.zebra('zebra', options.columns.length);
@@ -154,33 +156,39 @@ var Table = new Class({
             window.location = row_link.url.replace(':id', id);
             return false;
           }
+          if (row_link.indicator)
+            Global.indicator.show();
           if (row_link.url.contains('.json'))
             new Request({
               url: row_link.url.replace(':id', id),
-              method: me.methodFromTitle(row_link.title),
-              data: {
+              method: row_link.method || me.methodFromTitle(row_link.title),
+              data: $extend({
                 id: me.idFromParent(e.target.getParent()),
                 authenticity_token: Global.authenticity_token,
                 implementation: row_link.implementation
-              },
+              }, (row_link.data || {})),
               onSuccess: function(json){
                 if (json.trim() == '')
                   me.reload();
                 me.fireEvent((row_link.title.toLowerCase() + ' complete').replace(' ', '-').camelCase(), json);
+                if (row_link.indicator)
+                  Global.indicator.hide();
               }.bind(this)
             }).send();
           else
             new Request.HTML({
               url: row_link.url.replace(':id', id),
-              method: me.methodFromTitle(row_link.title),
-              data: {
+              method: row_link.method || me.methodFromTitle(row_link.title),
+              data: $extend({
                 id: me.idFromParent(e.target.getParent()),
                 authenticity_token: Global.authenticity_token,
                 implementation: row_link.implementation
-              },
+              }, (row_link.data || {})),
               evalScripts: false,
               onSuccess: function(tree, elements, html, js) {
                 me.fireEvent((row_link.title.toLowerCase() + ' complete').replace(' ', '-').camelCase(), [ elements[0], js ]);
+                if (row_link.indicator)
+                  Global.indicator.hide();
               }
             }).send();
           menu.fade('out');
@@ -257,6 +265,15 @@ var Table = new Class({
           this.set('sort', 'asc');
         }
         me.reload({ order: options.sortable[this.textContent] + ' ' + this.get('sort') }, this.textContent);
+      });
+    };
+    
+    this.dataFromHidden = function() {
+      var data = {};
+      rows.each(function(row) {
+        row.getElements('input').each(function(input) {
+          data[input.name] = input.value;
+        });
       });
     };
     

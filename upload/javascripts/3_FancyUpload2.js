@@ -256,7 +256,7 @@ var FancyUpload2 = new Class({
 	},
 
 	log: function(text, args) {
-		if (window.console) console.log(text.substitute(args || {}));
+		//if (window.console) console.log(text.substitute(args || {}));
 	}
 
 });

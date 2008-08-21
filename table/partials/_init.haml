@@ -1,13 +1,15 @@
 .table_widget{ :id => id }
   .title
+    - if indicator_where == 'top'
+      .indicator= indicator
     .links
       - table_links.each do |link|
         = '&nbsp;' * 2
         = link_to link[:title], link[:url]
     = title
     .categories
-      .indicator
-        = widget_image :widgets, :table, 'indicator.gif'
+      - if indicator_where == 'categories'
+        .indicator= indicator
       - categories.each_index do |index|
         - categories[index].each do |key, value|
           %div{ :id => key, :class => index > 0 ? 'selectable' : 'selected' }
