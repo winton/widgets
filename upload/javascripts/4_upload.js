@@ -17,7 +17,7 @@ var Upload = new Class({
 
     container.getElement('.browse').addEvent('click', function() {
     	upload.browse({
-    	  'Images (*.jpg, *.jpeg, *.gif, *.png)': '*.jpg; *.jpeg; *.gif; *.png; *.bmp; *.tiff',
+    	  'Images (*.jpg, *.jpeg, *.gif, *.png, *.bmp, *.tiff)': '*.jpg; *.jpeg; *.gif; *.png; *.bmp; *.tiff',
     	  'Audio (*.mp3, *.mp4, *.mid, *.ogg, *.wav)': '*.mp3; *.mp4; *.mid; *.ogg; *.wav',
     	  'Video (*.asf, *.avi, *.mpg, *.mov, *.flv)': '*.asf; *.avi; *.mpg; *.mov; *.flv'
     	});

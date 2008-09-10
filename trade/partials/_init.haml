@@ -22,7 +22,7 @@
       for more information.
     %br/
     %br/
-    = link_to '&lt; Back to trades', '#', :onclick => "$('trade_builder').getPrevious().fadeIn();$('trade_builder').destroy();return false;"
+    = link_to '&lt; Back to trades', '#', :onclick => "Global.trades_table.reload();$('trade_builder').getPrevious().fadeIn();$('trade_builder').destroy();return false;"
   - else
     - if options[:message]
       %b Message:
