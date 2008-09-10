@@ -92,7 +92,7 @@ var Dialog = new Class({
       } else if (options.url) {
         new Request.HTML({
           url: options.url,
-          data: options.data,
+          data: $extend({ implementation: options.implementation }, options.data || {}),
           evalScripts: false,
           onSuccess: function(tree, elements, html, js) {
             elements[0].inject(content);

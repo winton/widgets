@@ -154,7 +154,7 @@ var Table = new Class({
           var row_link = options.row_links.filter(function(item) {
             return item.title == this.textContent;
           }, this)[0];
-          var id = me.idFromParent(e.target.getParent());
+          var id = me.idFromParent(e.target.getParent('.parent'));
           if (row_link.direct) {
             window.location = row_link.url.replace(':id', id);
             return false;
@@ -166,7 +166,7 @@ var Table = new Class({
               url: row_link.url.replace(':id', id),
               method: row_link.method || me.methodFromTitle(row_link.title),
               data: $extend({
-                id: me.idFromParent(e.target.getParent()),
+                id: me.idFromParent(e.target.getParent('.parent')),
                 authenticity_token: Global.authenticity_token,
                 implementation: row_link.implementation
               }, (row_link.data || {})),
@@ -183,7 +183,7 @@ var Table = new Class({
               url: row_link.url.replace(':id', id),
               method: row_link.method || me.methodFromTitle(row_link.title),
               data: $extend({
-                id: me.idFromParent(e.target.getParent()),
+                id: me.idFromParent(e.target.getParent('.parent')),
                 authenticity_token: Global.authenticity_token,
                 implementation: row_link.implementation
               }, (row_link.data || {})),

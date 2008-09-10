@@ -1,11 +1,53 @@
-.trade{ :id => id }
-  .mine_target
-    .instructions Drag my things here
-  .mine
-    = render_widget :widgets, :table, { :id => 'trade_table_mine', :index_url => mine_index_url, :per_page => 5, :table_links => table_links, :include_js => true }
-  .theirs_target
-    .instructions Drag their things here
-  .theirs
-    = render_widget :widgets, :table, { :id => 'trade_table_theirs', :index_url => theirs_index_url + "&trade_to=#{trade_to}", :per_page => 5, :table_links => table_links, :include_js => true }
-  .submit
-    = submit_tag 'Send trade offer', :class => 'send'
+.trade{ :id => id, :class => @trade.accepted? ? 'accepted' : '' }
+  - if @trade.accepted?
+    %b Trade accepted
+    %br/
+    - to = not_me(@trade.trade_from, @trade.trade_to)
+    - if to.address_1.blank?
+      Please contact
+      = link_to to.name, person_path(to)
+      for shipping details.
+    - else
+      Please send your items to:
+      %br/
+      = to.name
+      %br/
+      = to.address_1
+      %br/
+      = to.address_2
+      %br/
+      = [ [ to.city, to.state ].join(', '), to.zip ].join ' '
+      or contact
+      = link_to to.name, person_path(to)
+      for more information.
+    %br/
+    %br/
+    = link_to '&lt; Back to trades', '#', :onclick => "$('trade_builder').getPrevious().fadeIn();$('trade_builder').destroy();return false;"
+  - else
+    - if options[:message]
+      %b Message:
+      = options[:message]
+    .mine_target
+      .instructions Drag my things here
+      - if options[:from_ids]
+        - Thing.find(from_ids).each do |thing|
+          %div{ :id => "trade_builder_#{thing.id}", :class => 'item', :price => '10', :style => 'position:relative' }
+            = image_tag thing.avatar, :height => 30, :class => 'tooltip'
+            %br/
+            = thing.name
+    .mine
+      = render_widget :widgets, :table, { :id => 'trade_table_mine', :index_url => mine_index_url, :per_page => 5, :table_links => table_links, :include_js => true }
+    .theirs_target
+      .instructions Drag their things here
+      - if options[:to_ids]
+        - Thing.find(to_ids).each do |thing|
+          %div{ :id => "trade_builder_#{thing.id}", :class => 'item', :price => '10', :style => 'position:relative' }
+            = image_tag thing.avatar, :height => 30, :class => 'tooltip'
+            %br/
+            = thing.name
+    .theirs
+      = render_widget :widgets, :table, { :id => 'trade_table_theirs', :index_url => theirs_index_url + "&trade_to=#{trade_to}", :per_page => 5, :table_links => table_links, :include_js => true }
+    .submit
+      = submit_tag 'Send trade offer', :class => 'send', :id => trade_to
+      - if options[:from_ids]
+        = submit_tag 'Accept trade offer', :class => 'accept', :id => @trade.id
