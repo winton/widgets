@@ -1,0 +1,4 @@
+{
+  :id => 'scroller',
+  :selector => '.smooth'
+}
