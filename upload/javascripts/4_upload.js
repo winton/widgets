@@ -1,9 +1,11 @@
 var Upload = new Class({
   initialize: function(options) {
     var container = $(options.id);
+    var browse = container.getElement('.browse');
     var upload = this.upload = new FancyUpload2(container.getElement('.status'), container.getElement('.list'), {
     	url:  options.upload_url,
     	path: options.flash_path,
+    	repositionDelay: options.reposition_delay,
     	data: { ebor_id: Global.ebor.id },
     	fieldName: 'Filedata',
     	onLoad: function() {
@@ -12,10 +14,12 @@ var Upload = new Class({
     	},
     	onAllComplete: function() {
     	  this.removeFile();
-    	}
+    	},
+    	debug: true,
+    	target: browse
     });
 
-    container.getElement('.browse').addEvent('click', function() {
+    browse.addEvent('click', function() {
     	upload.browse({
     	  'Images (*.jpg, *.jpeg, *.gif, *.png, *.bmp, *.tiff)': '*.jpg; *.jpeg; *.gif; *.png; *.bmp; *.tiff',
     	  'Audio (*.mp3, *.mp4, *.mid, *.ogg, *.wav)': '*.mp3; *.mp4; *.mid; *.ogg; *.wav',

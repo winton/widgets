@@ -1,7 +1,7 @@
 /**
  * Swiff.Uploader - Flash FileReference Control
  *
- * @version		1.1.1
+ * @version		1.2
  *
  * @license		MIT License
  *
@@ -24,7 +24,11 @@ Swiff.Uploader = new Class({
 		method: 'post',
 		data: null,
 		fieldName: 'Filedata',
-		callBacks: null
+		target: null,
+		height: '100%',
+		width: '100%',
+		callBacks: null,
+		repositionDelay: 0
 	},
 
 	initialize: function(options){
@@ -33,10 +37,15 @@ Swiff.Uploader = new Class({
 
 		var callBacks = this.options.callBacks || this;
 		if (callBacks.onLoad) this.addEvent('onLoad', callBacks.onLoad);
+		if (!callBacks.onBrowse) {
+			callBacks.onBrowse = function() {
+				return this.options.typeFilter;
+			}
+		}
 
 		var prepare = {}, self = this;
-		['onSelect', 'onAllSelect', 'onCancel', 'onBeforeOpen', 'onOpen', 'onProgress', 'onComplete', 'onError', 'onAllComplete'].each(function(index) {
-			var fn = (callBacks[index]) ? callBacks[index] : $empty;
+		['onBrowse', 'onSelect', 'onAllSelect', 'onCancel', 'onBeforeOpen', 'onOpen', 'onProgress', 'onComplete', 'onError', 'onAllComplete'].each(function(index) {
+			var fn = callBacks[index] || $empty;
 			prepare[index] = function() {
 				self.fireEvent(index, arguments, 10);
 				return fn.apply(self, arguments);
@@ -49,16 +58,39 @@ Swiff.Uploader = new Class({
 		var path = this.options.path;
 		if (!path.contains('?')) path += '?noCache=' + $time(); // quick fix
 
-		delete this.options.params.wMode;
 		this.parent(path);
 
-		if (!this.options.container) document.body.appendChild(this.object);
+		var scroll = window.getScroll();
+		this.box = new Element('div', {
+			styles: {
+				position: 'absolute',
+				visibility: 'visible',
+				zIndex: 9999,
+				overflow: 'hidden',
+				height: 15, width: 15,
+				top: scroll.y, left: scroll.x
+			}
+		});
+		this.inject(this.box);
+		this.box.inject($(this.options.container) || document.body);
+
 		return this;
 	},
 
 	load: function(){
 		this.remote('register', this.instance, this.options.multiple, this.options.queued);
 		this.fireEvent('onLoad');
+
+		this.target = $(this.options.target);
+		if (Browser.Plugins.Flash.version >= 10 && this.target) {
+			this.reposition.delay(this.options.repositionDelay, this);
+			window.addEvent('resize', this.reposition.bind(this));
+		}
+	},
+
+	reposition: function() {
+		var pos = this.target.getCoordinates(this.box.getOffsetParent());
+		this.box.setStyles(pos);
 	},
 
 	/*
@@ -67,7 +99,8 @@ Swiff.Uploader = new Class({
 	*/
 
 	browse: function(typeFilter){
-		return this.remote('browse', $pick(typeFilter, this.options.typeFilter));
+		this.options.typeFilter = $pick(typeFilter, this.options.typeFilter);
+		return this.remote('browse');
 	},
 
 	/*
