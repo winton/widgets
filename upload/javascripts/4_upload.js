@@ -15,7 +15,7 @@ var Upload = new Class({
     	onAllComplete: function() {
     	  this.removeFile();
     	},
-    	debug: true,
+    	//debug: true,
     	target: browse
     });
 

@@ -1,4 +1,5 @@
 var Dialog = new Class({
+  Implements: Events,
   initialize: function(options) {
     var lightbox;
     var container = new Element('div', {
@@ -32,10 +33,7 @@ var Dialog = new Class({
         left: options.width - (options.corners ? options.corners.width : 0) - 10
       },
       events: {
-        click: function() {
-          container.fadeOut();
-          if (lightbox) lightbox.hide();
-        }
+        click: function() { this.hide(); }.bind(this)
       }
     });
     close.inject(container, 'top');
@@ -56,8 +54,9 @@ var Dialog = new Class({
     
     this.hide = function() {
       container.fadeOut();
-      lightbox.hide();
-    };
+      if (lightbox) lightbox.hide();
+      this.fireEvent('hide');
+    }.bind(this);
     
     this.render = function(opts) {
       if (opts.html || opts.element || opts.url) {
@@ -69,7 +68,7 @@ var Dialog = new Class({
       
       if (options.lightbox) {
         lightbox = lightbox || new Lightbox($merge(options.lightbox, {
-          onClick: function() { container.fadeOut(); }
+          onClick: function() { this.hide(); }.bind(this)
         }));
         lightbox.show();
       }

@@ -1,1 +1,8 @@
-%div{ :id => id }
+- if encoded
+  %div{ :id => id }
+- else
+  .video_indicator
+    .status_bar
+    = image_tag 'indicator.gif'
+    %br/
+    Encoding your video, one moment.
