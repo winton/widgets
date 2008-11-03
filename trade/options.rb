@@ -31,5 +31,7 @@
     :edit   => '/trades/:id/edit.json',
     :update => '/trades/:id/update',
     :create => '/trades'
-  }
+  },
+  :mine_table_implementation   => [ :widgets, :table ],
+  :theirs_table_implementation => [ :widgets, :table ]
 }

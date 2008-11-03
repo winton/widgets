@@ -39,5 +39,7 @@
   
   :indicator => widget_image(:widgets, :table, 'indicator.gif'),
   :indicator_where => 'categories',
-  :load_on_start => true
+  
+  :no_results_template => 'template_no_results',
+  :load_on_start => true,
 }

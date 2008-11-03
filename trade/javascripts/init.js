@@ -35,6 +35,13 @@ if (!$('<%= id %>').hasClass('accepted')) {
       }
     }).send();
   });
+  $('<%= id %>').getElement('.cancel').addEvent('click', function() {
+    var table = $('trades_table');
+    var next = table.getNext();
+    if (next) next.destroy();
+    if (table.getPrevious()) table.getPrevious().fadeIn();
+    table.fadeIn();
+  });
   var accept = $('<%= id %>').getElement('.accept');
   if (accept)
     accept.addEvent('click', function() {

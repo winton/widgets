@@ -89,14 +89,14 @@ var Table = new Class({
     };
     
     this.reloadRows = function() {
-      var template = $('template_no_results');
+      var template = $(options.no_results_template);
       if (template) {
         var no_results = $(options.id + '_no_results');
         if (no_results) no_results.destroy();
         if (options.data.length == 0 && !options.category) {
-          if (template && !no_results)
+          if (template)
             template.render(options).inject(container, 'before');
-          container.fadeOut();
+          if (container.visible()) container.fadeOut();
           return;
         } else
           container.fadeIn();
@@ -107,10 +107,6 @@ var Table = new Class({
         if (index % options.columns.length == 0 && options.ids[id_index])
           item.id = options.id + '_' + options.ids[id_index];
       });
-      if (options.data.length == 0) {
-        rows.getFirst().addClass('no_results');
-        rows.getFirst().innerHTML = '<div>No results.</div>';
-      }
       rows.inject(container, 'bottom');
       rows.zebra('zebra', options.columns.length);
       this.attachRows();

@@ -25,29 +25,38 @@
     = link_to '&lt; Back to trades', '#', :onclick => "Global.trades_table.reload();$('trade_builder').getPrevious().fadeIn();$('trade_builder').destroy();return false;"
   - else
     - if options[:message]
-      %b Message:
+      %b
+        - if @trade.trade_from == @user
+          My message:
+        - else
+          = "#{@trade.trade_to.name}'s"
+          message:
       = options[:message]
     .mine_target
       .instructions Drag my things here
       - if options[:from_ids]
         - Thing.find(from_ids).each do |thing|
-          %div{ :id => "trade_builder_#{thing.id}", :class => 'item', :price => '10', :style => 'position:relative' }
+          %div{ :id => "trade_builder_#{thing.id}", :class => 'item', :price => thing.price, :style => 'position:relative' }
             = image_tag thing.avatar, :height => 30, :class => 'tooltip'
             %br/
             = thing.name
     .mine
-      = render_widget :widgets, :table, { :id => 'trade_table_mine', :index_url => mine_index_url, :per_page => 5, :table_links => table_links, :include_js => true }
+      = render_widget *[ options[:mine_table_implementation], { :id => 'trade_table_mine', :index_url => mine_index_url, :table_links => table_links, :include_js => true } ].flatten.compact
     .theirs_target
-      .instructions Drag their things here
+      .instructions
+        Drag
+        = "#{@trade.trade_to.name}'s"
+        things here
       - if options[:to_ids]
         - Thing.find(to_ids).each do |thing|
-          %div{ :id => "trade_builder_#{thing.id}", :class => 'item', :price => '10', :style => 'position:relative' }
+          %div{ :id => "trade_builder_#{thing.id}", :class => 'item', :price => thing.price, :style => 'position:relative' }
             = image_tag thing.avatar, :height => 30, :class => 'tooltip'
             %br/
             = thing.name
     .theirs
-      = render_widget :widgets, :table, { :id => 'trade_table_theirs', :index_url => theirs_index_url + "&trade_to=#{trade_to}", :per_page => 5, :table_links => table_links, :include_js => true }
+      = render_widget *[ options[:theirs_table_implementation], { :id => 'trade_table_theirs', :index_url => theirs_index_url + "&trade_to=#{trade_to}", :table_links => table_links, :include_js => true } ].flatten.compact
     .submit
+      = submit_tag 'Cancel', :class => 'cancel'
       = submit_tag 'Send trade offer', :class => 'send', :id => trade_to
       - if options[:from_ids]
         = submit_tag 'Accept trade offer', :class => 'accept', :id => @trade.id
