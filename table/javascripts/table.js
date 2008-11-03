@@ -1,7 +1,7 @@
 var Table = new Class({
   Implements: [ Events ],
   initialize: function(options) {
-    this.options = options;
+    this.options    = options;
     var container   = $(options.id);
     var indicator   = container.getElement('.indicator');
     var table_links = container.getElement('.title .links');
@@ -42,6 +42,10 @@ var Table = new Class({
     };
     
     this.reload = function(params, text_content) {
+      if (!options.index_url) {
+        container.hide();
+        return;
+      }
       this.fireEvent('reloadStart');
       indicator.fadeIn();
       table_links.hide();

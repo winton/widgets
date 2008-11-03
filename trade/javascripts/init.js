@@ -17,11 +17,13 @@ if (!$('<%= id %>').hasClass('accepted')) {
   });
   $('<%= id %>').getElement('.send').addEvent('click', function() {
     Global.indicator.show();
+    var ids = this.id.split(',');
     new Request.HTML({
       url: '/trades',
       method: 'post',
       data: {
-        'trade[trade_to_id]': this.id,
+        'trade[first_trade_id]': ids[0],
+        'trade[trade_to_id]': ids[1],
         'trade[from_ids]': Global.trade_table_mine_trade_builder.getDraggedIDs(),
         'trade[to_ids]': Global.trade_table_theirs_trade_builder.getDraggedIDs(),
         implementation: 'eborhood/widgets/form/dialog/trade',
@@ -41,6 +43,8 @@ if (!$('<%= id %>').hasClass('accepted')) {
     if (next) next.destroy();
     if (table.getPrevious()) table.getPrevious().fadeIn();
     table.fadeIn();
+    Global.trades_table.reload();
+    $('trade_table_history').hide();
   });
   var accept = $('<%= id %>').getElement('.accept');
   if (accept)

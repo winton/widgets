@@ -57,6 +57,6 @@
       = render_widget *[ options[:theirs_table_implementation], { :id => 'trade_table_theirs', :index_url => theirs_index_url + "&trade_to=#{trade_to}", :table_links => table_links, :include_js => true } ].flatten.compact
     .submit
       = submit_tag 'Cancel', :class => 'cancel'
-      = submit_tag 'Send trade offer', :class => 'send', :id => trade_to
+      = submit_tag 'Send trade offer', :class => 'send', :id => "#{@trade.id},#{trade_to}"
       - if options[:from_ids]
         = submit_tag 'Accept trade offer', :class => 'accept', :id => @trade.id
