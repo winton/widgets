@@ -134,26 +134,8 @@ var Table = new Class({
         });
         me.fireEvent('mouseleave', [row]);
       });
-      var html;
       r.addEvent('click', function(e) {
-        if (menu) menu.destroy();
-        if (options.row_links.length == 0) return true;
-        me.menu = menu = new Element('div', {
-          'class': 'table_widget_menu',
-          styles: {
-            top: e.page.y,
-            left: e.page.x,
-            opacity: 0
-          },
-          html: options.row_links.map(function(item) {
-            return '<a href="#" style="' + (item.style || '') + '">' + item.title + '</a>';
-          }).join('<br/>')
-        });
-        menu.inject(document.body, 'bottom');
-        menu.getElements('a').addEvent('click', function() {
-          var row_link = options.row_links.filter(function(item) {
-            return item.title == this.textContent;
-          }, this)[0];
+        var send = function(row_link) {
           var id = me.idFromParent(e.target.getParent('.parent'));
           if (row_link.direct) {
             window.location = row_link.url.replace(':id', id);
@@ -194,10 +176,35 @@ var Table = new Class({
                   Global.indicator.hide();
               }
             }).send();
-          menu.fade('out');
-          return false;
-        });
-        menu.fade('in');
+          return true;
+        };
+        if (options.row_click)
+          send(options.row_click);
+        else {
+          if (menu) menu.destroy();
+          if (options.row_links.length == 0) return true;
+          me.menu = menu = new Element('div', {
+            'class': 'table_widget_menu',
+            styles: {
+              top: e.page.y,
+              left: e.page.x,
+              opacity: 0
+            },
+            html: options.row_links.map(function(item) {
+              return '<a href="#" style="' + (item.style || '') + '">' + item.title + '</a>';
+            }).join('<br/>')
+          });
+          menu.inject(document.body, 'bottom');
+          menu.getElements('a').addEvent('click', function() {
+            var row_link = options.row_links.filter(function(item) {
+              return item.title == this.textContent;
+            }, this)[0];
+            send(row_link);
+            menu.fade('out');
+            return false;
+          });
+          menu.fade('in');
+        }
         return false;
       });
       document.addEvent('click', function(e) {

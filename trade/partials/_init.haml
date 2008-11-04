@@ -1,5 +1,5 @@
 .trade{ :id => id, :class => @trade.accepted? ? 'accepted' : '' }
-  - if @trade.accepted?
+  - if @trade.accepted? || @trade.accepted_in_history?
     %b Trade accepted
     %br/
     - to = not_me(@trade.trade_from, @trade.trade_to)
@@ -22,7 +22,7 @@
       for more information.
     %br/
     %br/
-    = link_to '&lt; Back to trades', '#', :onclick => "Global.trades_table.reload();$('trade_builder').getPrevious().fadeIn();$('trade_builder').destroy();return false;"
+    = link_to '&lt; Back to trades', '#', :onclick => "Global.trades_table.reload();if ($('trade_table_history')) $('trade_table_history').hide();$('trade_builder').getPrevious().fadeIn();$('trade_builder').destroy();return false;"
   - else
     - if options[:message]
       %b
@@ -58,5 +58,5 @@
     .submit
       = submit_tag 'Cancel', :class => 'cancel'
       = submit_tag 'Send trade offer', :class => 'send', :id => "#{@trade.id},#{trade_to}"
-      - if options[:from_ids]
+      - if options[:from_ids] && @trade.trade_to == current_user
         = submit_tag 'Accept trade offer', :class => 'accept', :id => @trade.id
