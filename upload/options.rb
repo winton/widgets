@@ -1,5 +1,5 @@
 {
   :id => 'upload',
   :upload_url => '/media_files',
-  :flash_path => widget_flash_path(:widgets, :upload, 'Swiff.Uploader.swf')
+  :flash_path => flash_path(:widgets, :upload, 'Swiff.Uploader.swf')
 }
