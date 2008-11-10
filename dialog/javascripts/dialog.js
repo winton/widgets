@@ -14,7 +14,7 @@ var Dialog = new Class({
     
     /*var indicator = new Element('div', {
       'class': 'indicator',
-      html:    '<%= widget_image :widgets, :dialog, "indicator.gif" %>',
+      html:    '<%= image :widgets, :dialog, "indicator.gif" %>',
       styles: {
         display: 'none',
         position: 'absolute',
@@ -42,8 +42,8 @@ var Dialog = new Class({
     content.inject(container, 'top');
     if (options.corners) {
       var imgs = [
-        [ '<%= widget_image :widgets, :dialog, "nw.png" %>', '', '<%= widget_image :widgets, :dialog, "ne.png" %>' ],
-        [ '<%= widget_image :widgets, :dialog, "sw.png" %>', '', '<%= widget_image :widgets, :dialog, "se.png" %>' ]
+        [ '<%= image :widgets, :dialog, "nw.png" %>', '', '<%= image :widgets, :dialog, "ne.png" %>' ],
+        [ '<%= image :widgets, :dialog, "sw.png" %>', '', '<%= image :widgets, :dialog, "se.png" %>' ]
       ];
       var corner_top = Tbl('corners', imgs[0], 'px', options.corners.width, options.width - options.corners.width * 2, options.corners.width);
       var corner_bot = Tbl('corners', imgs[1], 'px', options.corners.width, options.width - options.corners.width * 2, options.corners.width);

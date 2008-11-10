@@ -38,7 +38,7 @@
   :row_links => [],
   :row_click => nil,
   
-  :indicator => widget_image(:widgets, :table, 'indicator.gif'),
+  :indicator => image(:widgets, :table, 'indicator.gif'),
   :indicator_where => 'categories',
   
   :no_results_template => 'template_no_results',
