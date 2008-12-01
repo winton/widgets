@@ -9,8 +9,10 @@ var Form = new Class({
     form.addEvent('submit', function() {
       if (form.get('submitted')) return false;
       form.set('submitted', true);
-      form['commit'].value = 'One moment please...';
-      form['commit'].disabled = true;
+      if (form['commit']) {
+        form['commit'].value = 'One moment please...';
+        form['commit'].disabled = true;
+      }
       new Request.HTML({
         url: form.getProperty('action'),
         method: 'post',
