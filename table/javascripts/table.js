@@ -65,10 +65,6 @@ var Table = new Class({
             headers.inject(container, 'bottom');
             this.attachHeaders();
           }
-          if (rows)
-            rows.destroy();
-          if (pagination)
-            pagination.destroy();
           this.reloadRows();
           this.reloadPagination();
           if (text_content)
@@ -84,6 +80,8 @@ var Table = new Class({
     };
     
     this.reloadPagination = function() {
+      if (pagination)
+        pagination.destroy();
       pagination = new Element('div', { html: options.pagination });
       pagination.inject(container, 'bottom');
       pagination.getElements('a').addEvent('click', function() {
@@ -93,6 +91,8 @@ var Table = new Class({
     };
     
     this.reloadRows = function() {
+      if (rows)
+        rows.destroy();
       var template = $(options.no_results_template);
       if (template) {
         var no_results = $(options.id + '_no_results');
