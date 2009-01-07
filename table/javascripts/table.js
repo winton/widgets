@@ -68,7 +68,7 @@ var Table = new Class({
           this.reloadRows();
           this.reloadPagination();
           if (text_content)
-            rows.zebra('zebra_highlight', options.columns.length, options.columns.indexOf(text_content));
+            rows.zebra('zebra_highlight', options.columns.length+1, options.columns.indexOf(text_content));
           indicator.hide();
           table_links.fadeIn();
           this.fireEvent('reloaded');
@@ -112,7 +112,7 @@ var Table = new Class({
           item.id = options.id + '_' + options.ids[id_index];
       });
       rows.inject(container, 'bottom');
-      rows.zebra('zebra', options.columns.length);
+      rows.zebra('zebra', options.columns.length+1);
       this.attachRows();
     };
     
