@@ -106,7 +106,7 @@ var Table = new Class({
           container.fadeIn();
       }
       rows = Tbl('rows', options.data, '%', options.widths);
-      rows.getChildren().each(function(item, index) {
+      rows.getChildren().filter(function(item) { return item.hasClass('parent'); }).each(function(item, index) {
         var id_index = index / options.columns.length;
         if (index % options.columns.length == 0 && options.ids[id_index])
           item.id = options.id + '_' + options.ids[id_index];
