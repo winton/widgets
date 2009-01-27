@@ -1,6 +1,6 @@
 .dialog
   .corners_cell
-    :height <%= corners[:height] %>px
+    :height <%= corners ? corners[:height] : 0 %>px
     img
       :float left
   .corners1, .content, .close
